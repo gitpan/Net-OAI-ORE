@@ -1,0 +1,12 @@
+=head1 NAME
+
+Net::OAI::ORE - Libraries to build, write and read OAI-ORE 
+Resource Maps
+
+=head1 DESCRIPTION
+
+=head1 SEE ALSO
+
+L<http://www.openarchives.org/ore>
+
+=cut

@@ -1,0 +1,33 @@
+--- #YAML:1.0
+name:               Net-OAI-ORE
+version:            0.91
+abstract:           Modules to read/write/modify OAI-ORE resource maps
+author:
+    - Simeon Warner <simeon@cpan.org>
+license:            unknown
+distribution_type:  module
+configure_requires:
+    ExtUtils::MakeMaker:  0
+build_requires:
+    ExtUtils::MakeMaker:  0
+requires:
+    Algorithm::Diff:      0
+    Class::Accessor:      0
+    Data::UUID:           0
+    DateTime:             0
+    RDF::Core:            0.51
+    RDF::Core::Model:     0
+    RDF::Notation3:       0.91
+    RDF::Notation3::RDFCore:  0
+    Test::More:           0
+    XML::Atom::Syndication:  0.942
+    XML::Atom::Syndication::Writer:  0
+    XML::Writer:          0.611
+no_index:
+    directory:
+        - t
+        - inc
+generated_by:       ExtUtils::MakeMaker version 6.54
+meta-spec:
+    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:  1.4
