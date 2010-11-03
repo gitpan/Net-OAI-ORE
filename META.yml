@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Net-OAI-ORE
-version:            0.92
+version:            0.93
 abstract:           Modules to read/write/modify OAI-ORE resource maps
 author:
     - Simeon Warner <simeon@cpan.org>

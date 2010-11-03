@@ -1,5 +1,5 @@
 package Net::OAI::ORE::ReM;
-#$Id: ReM.pm,v 1.28 2010-11-03 15:37:15 simeon Exp $
+#$Id: ReM.pm,v 1.29 2010-11-03 16:07:05 simeon Exp $
 
 =head1 NAME
 
@@ -7,12 +7,12 @@ Net::OAI::ORE::ReM - Module implementing OAI-ORE Resource Map object
 
 =head1 VERSION
 
-Version 0.92. Written against the v1.0 OAI-ORE specification 
+Version 0.93. Written against the v1.0 OAI-ORE specification 
 (L<http://www.openarchives.org/ore/1.0/toc>).
 
 =cut
 
-our $VERSION = '0.92';
+our $VERSION = '0.93';
 
 =head1 SYNPOSIS
 
