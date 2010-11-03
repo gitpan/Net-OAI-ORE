@@ -1,12 +1,13 @@
 package Net::OAI::ORE::TriX;
+#$Id: TriX.pm,v 1.12 2010-11-03 15:38:23 simeon Exp $
 
 =head1 NAME
 
-Net::OAI::ORE::TriX
+Net::OAI::ORE::TriX - Parse/serialize OAI-ORE Resource Maps in TriX format
 
 =head1 SYNPOSIS
 
-Class to parse and serialize OAI-ORE ReMs in TriX format.
+Module to parse and serialize OAI-ORE ReMs in TriX format.
 
 =head1 DESCRIPTION
 

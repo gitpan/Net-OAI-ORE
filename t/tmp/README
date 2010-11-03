@@ -1,0 +1,5 @@
+t/tmp dir is used to temporary files during testing. Using /tmp
+is a unix/linux assumption and is not writeable on one system used
+by CPAN testers.
+
+$Id$

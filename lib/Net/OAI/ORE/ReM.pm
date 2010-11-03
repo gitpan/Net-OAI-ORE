@@ -1,17 +1,18 @@
 package Net::OAI::ORE::ReM;
+#$Id: ReM.pm,v 1.28 2010-11-03 15:37:15 simeon Exp $
 
 =head1 NAME
 
-Net::OAI::ORE::ReM - Class implementing OAI-ORE Resource Map object
+Net::OAI::ORE::ReM - Module implementing OAI-ORE Resource Map object
 
 =head1 VERSION
 
-Version 0.91. Written against the v1.0 OAI-ORE specification 
+Version 0.92. Written against the v1.0 OAI-ORE specification 
 (L<http://www.openarchives.org/ore/1.0/toc>).
 
 =cut
 
-our $VERSION = '0.91';
+our $VERSION = '0.92';
 
 =head1 SYNPOSIS
 
@@ -26,8 +27,10 @@ and language of OAI-ORE.
 
 An ORE Resource Map is comprised of two things:
 
- 1) a URI indicating its location
- 2) an RDF graph expressing the relationship between an aggregation and aggreted resources
+1) a URI indicating its location
+
+2) an RDF graph expressing the relationship between an aggregation and 
+aggreted resources
 
 This class encapsulates these two things ($rem->uri and $rem->model),
 some other useful informatino about paring and serialization methods,
@@ -63,14 +66,19 @@ use DateTime;
 use IO::File;
 
 use base qw(Class::Accessor);
-__PACKAGE__->mk_accessors(qw(die_level warn_level));
+__PACKAGE__->mk_accessors(qw(default_format die_level warn_level));
 
 =head1 METHODS
 
-=head3 $rem->new(%args)
+=head3 Net::OAI::ORE::ReM->new(%args)
 
 Create a new Resource Map (ReM) object. The resource map is comprised
 of a URI (URI-R) and a set of triples, the model.
+
+Any C<%args> supplied are used to set the object variables.
+As a shorthand for construction argument C{ar} may be used to 
+provide an arrayref of aggregated resources which are added
+using C<$rem->aggregated_resources($args{ar})>.
 
 =cut
 
@@ -83,7 +91,7 @@ sub new {
                    'rdfxml' =>'Net::OAI::ORE::RDFXML',
                    'trix'   =>'Net::OAI::ORE::TriX',
                    'n3'     =>'Net::OAI::ORE::N3'},
-            'default_format'=>'atom',
+            'default_format'=>'rdfxml',
             'die_level'=>FATAL,
             'warn_level'=>WARN,
             @_};
@@ -104,7 +112,7 @@ sub new {
 
 Set or access the identity of the ReM (URI-R). This should be the first 
 thing set when building a Resource Map. The validity of the URI is checked
-with check_valid_uri(..).
+with C<check_valid_uri(..)>.
 
 =cut
 
@@ -184,16 +192,16 @@ the first will be returned. Returns nothing if there is no creator set.
 
 See L<http://www.openarchives.org/ore/1.0/datamodel#Metadata_about_the_ReM>:
 
-"The identity of the authoring authority (human, organization, or agent) of 
-the Resource Map, using the dcterms:creator predicate, with an object that MUST 
-be a reference to a Resource of type L<http://purl.org/dc/terms/Agent>. This MAY 
-then be the subject of the following triples:
+ The identity of the authoring authority (human, organization, or agent) of 
+ the Resource Map, using the dcterms:creator predicate, with an object that MUST 
+ be a reference to a Resource of type L<http://purl.org/dc/terms/Agent>. This MAY 
+ then be the subject of the following triples:
 
-* A triple with the predicate foaf:name and an object that is a text string 
-containing some descriptive name of the authoring authority.
+ * A triple with the predicate foaf:name and an object that is a text string 
+   containing some descriptive name of the authoring authority.
 
-* A triple with the predicate foaf:mbox and an object that is a URI that is 
-the email address of the authoring authority."
+ * A triple with the predicate foaf:mbox and an object that is a URI that is 
+   the email address of the authoring authority.
 
 =cut
 
@@ -214,8 +222,8 @@ sub creators {
 
 =head3 $rem->creator()
 
-Assumes one creator. Wrapper around $rem->creators() that does the same thing except in the case where
-there are multiple creators it will return just the first.
+Assumes one creator. Wrapper around $rem->creators() that does the same thing 
+except in the case where there are multiple creators it will return just the first.
 
 =cut
 
@@ -250,7 +258,7 @@ Set or access the option creation timestamp of the ReM. Returns
 now if not set. Type should be either CREATED or MODIFIED constant.
 Usually called via created_as_unix() or modified_as_unix() wrappers.
 
-Will set if $timestamp defined.
+Will set if timestamp if C<$timestamp> is defined.
 
 =cut
 
@@ -277,7 +285,7 @@ sub timestamp_as_unix {
 
 Set or access the creation timestamp of the ReM as a Unix timestamp. 
 
-Will set if $timestamp defined.
+Will set timestamp if C<$timestamp> is defined.
 
 =cut
 
@@ -289,9 +297,9 @@ sub created_as_unix {
 
 =head3 $rem->modified_as_unix($timestamp)
 
-Set or access the creation timestamp of the ReM as a Unix timestamp.
+Set or access the modification timestamp of the ReM as a Unix timestamp.
 
-Will set it $timestamp defined.
+Will set timestamp if C<$timestamp> is defined.
 
 =cut
 
@@ -308,7 +316,7 @@ Set or access the timestamp of the rem as an ISO8601 string.
 Type should be either CREATED or MODIFIED constant.
 Usually called via created_as_iso8601() or modified_as_iso8601() wrappers.
 
-Will set if $timestamp defined.
+Will set timetstamp if C<$timestamp> is defined.
 
 =cut
 
@@ -346,7 +354,7 @@ sub now_as_iso8601 {
 
 Set or access the creation timestamp of the ReM as a ISO8601 timestamp.
 
-Will set if $timestamp defined.
+Will set timestamp if C<$timestamp> is defined.
 
 =cut
 
@@ -360,7 +368,7 @@ sub created_as_iso8601 {
 
 Set or access the creation timestamp of the ReM as a ISO8601 timestamp.
 
-Will set if $timestamp defined.
+Will set timestamp if C<$timestamp> is defined.
 
 =cut
 
@@ -372,10 +380,10 @@ sub modified_as_iso8601 {
 
 =head3 $rem->aggregation_metadata($predicate,$only)
 
-If $only is not specified then the objects matching will be returned.
+If C<$only> is not specified then the objects matching will be returned.
 
-If $only is RESOURCE then only resource labels will be included, if
-LITERAL then only literal labels will be returned.
+If C<$only> is C<RESOURCE> then only resource labels will be included, if
+C<LITERAL> then only literal labels will be returned.
 
 =cut
 
@@ -391,8 +399,8 @@ sub aggregation_metadata {
 
 =head3 $rem->aggregation_metadata_literal($predicate)
 
-Wrapper for $rem->aggregation_metadata that will take just the first
-matching literal, or return undef if there a no matches
+Wrapper for C<$rem->aggregation_metadata> that will take just the first
+matching literal, or return undef if there a no matches.
 
 =cut
 
@@ -478,16 +486,16 @@ sub is_valid {
 
 =head3 $rem->parse($format,$src,$uri_rem)
 
-Parse resource $uri_rem. Get it from $src, where $src may be 
+Parse resource C<$uri_rem>. Get it from C<$src>, where C<$src> may be 
 either a string containing the representation to be parsed,
-or an open filehandle. If $src is not set then attempt to 
-download from $uri_rem using parseuri().
+or an open filehandle. If C<$src> is not set then attempt to 
+download from C<$uri_rem> using C<parseuri()>.
 
-To parse a file directly, use the parsefile() wrapper. To parse
-a URI directly, use the parseuri() wrapper.
+To parse a file directly, use the C<parsefile()> wrapper. To parse
+a URI directly, use the C<parseuri()> wrapper.
 
 Will run validation checks on the resource map model obtained. Set
-die_level('RECKLESS') to ingnore errors.
+C<$rem->die_level(RECKLESS)> to ignore errors.
 
 Will return true (1) on success, false (undef) on failure. Will
 have set errstr on failure.
@@ -554,10 +562,10 @@ sub parse {
 
 =head3 $rem->parsefile($format,$file,$uri_rem)
 
-Wrapper for parse($format,$uri_rem,$src) which does nothing with
-$format and $uri_rem but opens $file and passes the reulting filehandle
-on to parse(...). Returns undef if the file cannot be opened, otherwise
-return values as for parse(...).
+Wrapper for X<$rem->parse($format,$uri_rem,$src)> which does nothing with
+C<$format> and C<$uri_rem> but opens C<$file> and passes the reulting filehandle
+on to C<$rem->parse(...)>. Returns C<undef> if the file cannot be opened, otherwise
+return values as for C<$rem->parse(...)>.
 
 =cut
 
@@ -577,9 +585,10 @@ sub parsefile {
 
 =head3 $rem->parseuri($format,$uri_rem)
 
-Simple wrapper for parse(..) that downloads $uri_rem with
-L<LWP::Simple> before passing it on. Returns undef if $uri_rem 
-cannot be downloaded, otherwise return values as for parse(...).
+Simple wrapper for X<$rem->parse($format,$uri_rem,$src)> that 
+downloads C<$uri_rem> with L<LWP::Simple> before passing it on. 
+Returns C<undef> if C<$uri_rem> cannot be downloaded, otherwise 
+return values as for C<$rem->parse(...)>.
 
 =cut
 
@@ -609,11 +618,11 @@ sub parseuri {
 
 =head3 $rem->serialize()
 
-Serialize in default format.
+Serialize in default format which has accessor C<$rem->default_format>.
 
 =head3 $rem->serialize($format)
 
-Serialize in $format. This will use and call the appropriate
+Serialize in C<$format>. This will use and call the appropriate
 writer class.
 
 =cut
@@ -640,7 +649,7 @@ sub serialize {
 
 =head3 $rem->errstr($str) or $rem->errstr
 
-Resets the error string to $str if $str provided.
+Resets the error string to C<$str> if C<$str> provided.
 
 Returns a string, either the error string if set, else ''.
 
@@ -656,7 +665,7 @@ sub errstr {
 
 =head3 $rem->add_errstr($str)
 
-Add to the error string. Will append \n if not present in $str.
+Add to the error string. Will append C<\n> if not present in C<$str>.
 
 =cut
 
@@ -670,7 +679,7 @@ sub add_errstr {
 
 =head3 $rem->err($level,$msg)
 
-Log and/or report an error $msg at level $level. Intended mainly
+Log and/or report an error C<$msg> at level C<$level>. Intended mainly
 for internal use and use by particular format classes.
 
 =cut 
@@ -689,8 +698,8 @@ sub err {
 
 =head3 $rem->check_valid_uri($uri,$description)
 
-Check that the supplied $uri is valid and create $rem->err if not. Returns
-true if valid, false otherwise.
+Check that the supplied C<$uri> is valid and create C<$rem->err> if not. 
+Returns true if valid, false otherwise.
 
 =cut
 

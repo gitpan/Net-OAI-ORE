@@ -1,17 +1,14 @@
 package Net::OAI::ORE::Model;
+#$Id: Model.pm,v 1.15 2010-11-03 15:12:40 simeon Exp $
 
 =head1 NAME
 
-Net::OAI::ORE::Model - Class for OAI-ORE Resource Map model.
-
-=head1 VERSION
-
-$Id: Model.pm,v 1.14 2010-09-01 21:20:32 simeon Exp $
+Net::OAI::ORE::Model - Module for model component of an OAI-ORE Resource Map
 
 =head1 SYNOPSIS
 
 In essence, the model is simply a set of triples and we thus store them in
-a triple store provided by RDF::Core::Model/RDF::Core::Storage etc..
+a triple store provided by L<RDF::Core::Model>, L<RDF::Core::Storage> etc..
 
 =cut
 

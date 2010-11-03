@@ -4,7 +4,7 @@
 #
 ##### FIXME - Put Atom code back when moved to current spec
 #
-# $Id: 71-jcdl2008-examples.t,v 1.10 2010-09-01 21:34:42 simeon Exp $
+# $Id: 71-jcdl2008-examples.t,v 1.11 2010-11-03 15:37:15 simeon Exp $
 use strict;
 use warnings;
 
@@ -14,14 +14,13 @@ use Diff qw(diff);
 use Test::More;
 use Getopt::Std;
 
-plan('tests'=>4);
+plan('tests'=>5);
 
 use_ok( 'Net::OAI::ORE::ReM' );
 #use_ok( 'Net::OAI::ORE::Atom' );
 use Net::OAI::ORE::Constant qw(:all);
 
 my $file_base='t/examples/jcdl2008_paper/example';
-my $tmp_base='/tmp/71-jcdl2008-examples';
 
 my $file="$file_base.n3";
 if (not -r $file) {
@@ -35,6 +34,13 @@ ok($rem->is_valid, "ReM is valid");
 if (not $rem->is_valid) {
   BAIL_OUT("Parse error with $file: errstr=".$rem->errstr()."\n");
 }
+
+# Check place to write test dump file, other tests will fail 
+# if this one does...
+my $test_tmp='t/tmp';
+ok(-d $test_tmp and -w $test_tmp,"Test tmp dir ($test_tmp) exists/writable");
+my $test_file="$test_tmp/21-parse-n3-and-dump-rdf.rdf";
+my $tmp_base="$test_tmp/71-jcdl2008-examples";
 
 # Dump as N3 and check against stored dump file
 my $n3a=$rem->model->as_n3;

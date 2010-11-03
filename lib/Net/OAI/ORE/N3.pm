@@ -1,8 +1,9 @@
 package Net::OAI::ORE::N3;
+#$Id: N3.pm,v 1.13 2010-11-03 15:13:17 simeon Exp $
 
 =head1 NAME
 
-Net::OAI::ORE::N3
+Net::OAI::ORE::N3 - Parse/serialize OAI-ORE Resource Maps in N3 format
 
 =head1 SYNPOSIS
 

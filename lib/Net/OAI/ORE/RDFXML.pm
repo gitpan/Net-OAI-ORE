@@ -1,12 +1,13 @@
 package Net::OAI::ORE::RDFXML;
+#$Id: RDFXML.pm,v 1.5 2010-11-03 15:18:31 simeon Exp $
 
 =head1 NAME
 
-Net::OAI::ORE::RDFXML
+Net::OAI::ORE::RDFXML - Parse/serialize OAI-ORE Resource Maps in RDF/XML format
 
 =head1 SYNPOSIS
 
-Class to parse and serialize OAI-ORE resource maps in RDF/XML format. 
+Module to parse and serialize OAI-ORE resource maps in RDF/XML format. 
 See L<Net::OAI::ORE>.
 
 =cut

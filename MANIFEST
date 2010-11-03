@@ -59,3 +59,4 @@ t/examples/atom-implementation-examples/atom_arXiv_maxi.atom
 t/examples/jcdl2008_paper/example.n3
 t/examples/jcdl2008_paper/example.atom.dump
 t/examples/jcdl2008_paper/example.n3.dump
+t/tmp/README

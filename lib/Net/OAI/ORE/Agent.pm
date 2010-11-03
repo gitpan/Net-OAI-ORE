@@ -1,8 +1,9 @@
 package Net::OAI::ORE::Agent;
+#$Id: Agent.pm,v 1.3 2010-11-03 15:14:46 simeon Exp $
 
 =head1 NAME
 
-Net::OAI::ORE::Agent - Object to represent http://purl.org/dc/terms/Agent
+Net::OAI::ORE::Agent - Module to represent http://purl.org/dc/terms/Agent
 
 =head1 SYNPOSIS
 
@@ -13,6 +14,8 @@ Net::OAI::ORE::Agent - Object to represent http://purl.org/dc/terms/Agent
 
 =head1 DESCRIPTION
 
+Within OAI-ORE an agent, typically but not necessarily a person,
+may have a name, an email address and a URI.
 
 =cut
 

@@ -2,13 +2,13 @@
 #
 # Test this module simple N3 example
 #
-# $Id: 21-parse-n3-and-dump-rdf.t,v 1.2 2010-06-24 00:59:42 simeon Exp $
+# $Id: 21-parse-n3-and-dump-rdf.t,v 1.3 2010-11-03 15:37:15 simeon Exp $
 use strict;
 use warnings;
 
 use English qw(-no_match_vars);
 use Test::More;
-plan('tests'=>3);
+plan('tests'=>4);
 
 use_ok( 'Net::OAI::ORE::ReM' );
 use_ok( 'Net::OAI::ORE::N3' );
@@ -30,7 +30,9 @@ if (not $rem->parsefile('n3',$n3_src_file)) {
 
 print "# File $n3_src_file parsed OK\n";
 my $test=$rem->model->as_rdfxml;
-my $test_file="/tmp/21-parse-n3-and-dump-rdf.rdf";
+my $test_tmp='t/tmp';
+ok(-d $test_tmp and -w $test_tmp,"Test tmp dir ($test_tmp) exists/writable");
+my $test_file="$test_tmp/21-parse-n3-and-dump-rdf.rdf";
 dump_str_to_file($test,$test_file,"RDFXML dump");
 my $dump=read_file($rdfxml_file);
 is($test,$dump,"Check RDFXML dump from N3 input against stored dump: $test_file $rdfxml_file");
